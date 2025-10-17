@@ -177,76 +177,6 @@ jobs:
           path: ${{ env.APP_NAME }}.*.node
           if-no-files-found: error
 
-  build-wasm:
-    name: Build and test Wasm - node@${{ matrix.node }}(Linux-x64-gnu)
-    strategy:
-      fail-fast: false
-      matrix:
-        node:
-          - '16'
-          - '18'
-          - '20'
-          - '22'
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Rustup toolchain version
-        shell: bash
-        id: rustup-version
-        run: |
-          export RUST_TOOLCHAIN_VERSION="$(grep 'channel' rust-toolchain.toml | head -1 | awk -F '"' '{print $2}')"
-          echo "Rust toolchain version: $RUST_TOOLCHAIN_VERSION"
-          echo "RUST_TOOLCHAIN_VERSION=$RUST_TOOLCHAIN_VERSION" >> "$GITHUB_OUTPUT"
-
-      - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@stable
-        if: ${{ !matrix.settings.docker }}
-        with:
-          toolchain: ${{ steps.rustup-version.outputs.RUST_TOOLCHAIN_VERSION }}
-          targets: ${{ matrix.settings.target }}
-
-      - name: Cache cargo
-        uses: Swatinem/rust-cache@v2
-        with:
-          key: ${{ matrix.settings.target }}-node@14-cargo-cache
-
-      - name: Install wasm-pack
-        uses: jetli/wasm-pack-action@v0.4.0
-        with:
-          version: 'latest'
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build Wasm
-        run: yarn build:wasm
-
-      - name: Test Wasm
-        run: yarn test:wasm
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        if: ${{ matrix.node == '20' }}
-        with:
-          name: wasm32
-          path: wasm/dist/*.wasm
-          if-no-files-found: error
-          overwrite: true
-
-      - name: List packages
-        run: |
-          ls -R ./wasm
-          ls -lt ./wasm/index_bg.wasm
-        shell: bash
-
   test-macOS-windows-binding:
     name: Test bindings on ${{ matrix.settings.target }} - node@${{ matrix.node }}
     needs:
@@ -480,7 +410,6 @@ jobs:
     name: Publish
     runs-on: ubuntu-latest
     needs:
-      - build-wasm
       - test-macOS-windows-binding
       - test-linux-x64-gnu-binding
       - test-linux-x64-musl-binding
