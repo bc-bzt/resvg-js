@@ -300,12 +300,11 @@ var Resvg = class {
     return ret;
   }
   /**
-  * Set the SVG
+  * set an SVG in Node.js
   * @param {Uint8Array | string} svg
   */
-  setSvg(svg) {
-    wasm.resvg_setSvg(this.__wbg_ptr, addHeapObject(svg));
-    return this;
+  set_svg(svg) {
+    wasm.resvg_set_svg(this.__wbg_ptr, addHeapObject(svg));
   }
   /**
   * Renders an SVG in Wasm

@@ -459,20 +459,19 @@ impl Resvg {
     }
 
     /// set an SVG in Node.js
-    pub fn set_svg(&mut self, svg: Either<String, Buffer>) {
-        let tree = match &svg {
-            Either::A(s) => usvg::Tree::from_str(s, &self.opts),
-            Either::B(b) => usvg::Tree::from_data(b.as_ref(), &self.opts),
+    pub fn set_svg(&mut self, svg: IStringOrBuffer){
+        let mut tree = if js_sys::Uint8Array::instanceof(&svg) {
+            let uintarray = js_sys::Uint8Array::unchecked_from_js_ref(&svg);
+            let svg_buffer = uintarray.to_vec();
+            usvg::Tree::from_data(&svg_buffer, &self.opts).expect("invalid SVG binary data")
+        } else if let Some(s) = svg.as_string() {
+            usvg::Tree::from_str(s.as_str(), &self.opts).expect("invalid SVG string")
+        } else {
+            panic!("Input must be a Uint8Array or String");
         };
-        match tree {
-            Ok(mut t) => {
-                t.convert_text(&self.fontdb);
-                self.tree = t;
-            }
-            Err(e) => {
-                eprintln!("svg 解析失败: {}", e);
-            }
-        }
+        tree.convert_text(&self.fontdb);
+        // 存起来供后续渲染使用
+        self.tree = tree;
     }
 
     /// Renders an SVG in Wasm

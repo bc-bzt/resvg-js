@@ -1,5 +1,5 @@
 {
-  "name": "@resvg/resvg-js",
+  "name": "@venjs/resvg-js",
   "version": "2.6.3-alpha.3",
   "description": "A high-performance SVG renderer and toolkit, powered by Rust based resvg and napi-rs",
   "main": "index.js",
