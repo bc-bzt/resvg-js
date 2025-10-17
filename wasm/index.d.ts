@@ -94,6 +94,7 @@ export declare const initWasm: (module_or_path: Promise<InitInput> | InitInput) 
 export declare const Resvg: {
 	new (svg: Uint8Array | string, options?: ResvgRenderOptions): {
 		free(): void;
+		svg(svg: Uint8Array | string): void;
 		render(): RenderedImage;
 		toString(): string;
 		innerBBox(): BBox | undefined;

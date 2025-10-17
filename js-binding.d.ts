@@ -12,6 +12,8 @@ export declare class BBox {
 }
 export declare class Resvg {
   constructor(svg: string | Buffer, options?: string | undefined | null)
+  /** set an SVG in Node.js */
+  setSvg(svg: string | Buffer): void
   /** Renders an SVG in Node.js */
   render(): RenderedImage
   /** Output usvg-simplified SVG string */

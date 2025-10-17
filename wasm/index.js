@@ -327,6 +327,14 @@ var Resvg = class {
     return ret;
   }
   /**
+  * Set the SVG
+  * @param {Uint8Array | string} svg
+  */
+  setSvg(svg) {
+    wasm.resvg_setSvg(this.__wbg_ptr, addHeapObject(svg));
+    return this;
+  }
+  /**
   * Renders an SVG in Wasm
   * @returns {RenderedImage}
   */

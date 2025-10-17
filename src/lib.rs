@@ -3,6 +3,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 use std::sync::Arc;
+use resvg::usvg::fontdb::Database;
 
 #[cfg(not(target_arch = "wasm32"))]
 use napi::bindgen_prelude::{
@@ -61,6 +62,8 @@ pub struct BBox {
 pub struct Resvg {
     tree: usvg::Tree,
     js_options: JsOptions,
+    opts: usvg::Options,
+    fontdb: Database,
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
@@ -161,7 +164,25 @@ impl Resvg {
         }
         .map_err(|e| napi::Error::from_reason(format!("{e}")))?;
         tree.convert_text(&fontdb);
-        Ok(Resvg { tree, js_options })
+        Ok(Resvg { tree, js_options, opts, fontdb})
+    }
+
+    #[napi(js_name = setSvg)]
+    /// set an SVG in Node.js
+    pub fn set_svg(&mut self, svg: Either<String, Buffer>) {
+        let tree = match &svg {
+            Either::A(s) => usvg::Tree::from_str(s, &self.opts),
+            Either::B(b) => usvg::Tree::from_data(b.as_ref(), &self.opts),
+        };
+        match tree {
+            Ok(mut t) => {
+                t.convert_text(&self.fontdb);
+                self.tree = t;
+            }
+            Err(e) => {
+                eprintln!("svg 解析失败: {}", e);
+            }
+        }
     }
 
     #[napi]

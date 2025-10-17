@@ -55,6 +55,7 @@ export function renderAsync(
 export class Resvg {
   constructor(svg: Buffer | string, options?: ResvgRenderOptions | null)
   toString(): string
+  setSvg(svg: Buffer | string): void
   render(): RenderedImage
   /**
    * Calculate a maximum bounding box of all visible elements in this SVG.
