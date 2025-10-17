@@ -443,7 +443,7 @@ impl Resvg {
             Err(Error::InvalidInput)
         }?;
         tree.convert_text(&fontdb);
-        Ok(Resvg { tree, js_options })
+        Ok(Resvg { tree, js_options, opts, fontdb})
     }
 
     /// Get the SVG width
@@ -456,6 +456,23 @@ impl Resvg {
     #[wasm_bindgen(getter)]
     pub fn height(&self) -> f32 {
         self.tree.size.height().round()
+    }
+
+    /// set an SVG in Node.js
+    pub fn set_svg(&mut self, svg: Either<String, Buffer>) {
+        let tree = match &svg {
+            Either::A(s) => usvg::Tree::from_str(s, &self.opts),
+            Either::B(b) => usvg::Tree::from_data(b.as_ref(), &self.opts),
+        };
+        match tree {
+            Ok(mut t) => {
+                t.convert_text(&self.fontdb);
+                self.tree = t;
+            }
+            Err(e) => {
+                eprintln!("svg 解析失败: {}", e);
+            }
+        }
     }
 
     /// Renders an SVG in Wasm
