@@ -1,5 +1,5 @@
 import * as path from 'https://deno.land/std@0.159.0/path/mod.ts'
-import { Resvg } from 'npm:@resvg/resvg-js'
+import { Resvg } from 'npm:@venjs/resvg-js'
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
 
