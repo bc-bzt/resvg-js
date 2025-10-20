@@ -1,6 +1,6 @@
 {
   "name": "@venjs/resvg-js-darwin-arm64",
-  "version": "2.6.5",
+  "version": "2.6.6",
   "os": [
     "darwin"
   ],

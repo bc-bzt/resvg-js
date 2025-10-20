@@ -1,6 +1,6 @@
 {
   "name": "@venjs/resvg-js-android-arm-eabi",
-  "version": "2.6.5",
+  "version": "2.6.6",
   "os": [
     "android"
   ],
