@@ -1,6 +1,6 @@
 {
   "name": "@venjs/resvg-js-linux-x64-musl",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "os": [
     "linux"
   ],

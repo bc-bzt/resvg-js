@@ -1,6 +1,6 @@
 {
   "name": "@venjs/resvg-js-win32-x64-msvc",
-  "version": "2.6.4",
+  "version": "2.6.5",
   "os": [
     "win32"
   ],
