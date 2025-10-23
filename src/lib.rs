@@ -176,7 +176,7 @@ impl Resvg {
         };
         match tree {
             Ok(mut t) => {
-                t.convert_text(&self.fontdb);
+                // t.convert_text(&self.fontdb);
                 self.tree = t;
             }
             Err(e) => {
